@@ -48,3 +48,18 @@ const (
 	ELSE     = "ELSE"
 	RETURN   = "RETURN"
 )
+
+// map of keywords
+var keywords = map[string]TokenType{
+	"func": FUNCTION,
+	"let":  LET,
+}
+
+// LookupIdentifier check if the given identifier is a keyword
+func LookupIdentifier(ident string) TokenType {
+	if t, ok := keywords[ident]; ok {
+		return t
+	} else {
+		return IDENT
+	}
+}

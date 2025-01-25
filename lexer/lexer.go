@@ -32,6 +32,7 @@ func (l *Lexer) readChar() {
 // NextToken returns Token based on the current character
 func (l *Lexer) NextToken() token.Token {
 	var t token.Token
+	l.eatWhitespace()
 	switch l.currentChar {
 	case '=':
 		t = token.Token{Type: token.ASSIGN, Literal: string(l.currentChar)}
@@ -61,6 +62,7 @@ func (l *Lexer) NextToken() token.Token {
 	default:
 		if isLetter(l.currentChar) {
 			t.Literal = l.readIdentifier()
+			t.Type = token.LookupIdentifier(t.Literal)
 			return t
 		} else {
 			t = token.Token{Type: token.ILLEGAL, Literal: string(l.currentChar)}
@@ -79,4 +81,10 @@ func (l *Lexer) readIdentifier() string {
 
 func isLetter(c byte) bool {
 	return 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_'
+}
+
+func (l *Lexer) eatWhitespace() {
+	for l.currentChar == ' ' || l.currentChar == '\t' || l.currentChar == '\n' || l.currentChar == '\r' {
+		l.readChar()
+	}
 }
