@@ -64,6 +64,20 @@ func (l *Lexer) NextToken() token.Token {
 			t.Literal = l.readIdentifier()
 			t.Type = token.LookupIdentifier(t.Literal)
 			return t
+		} else if isDigit(l.currentChar) {
+			t.Literal = l.readNumber()
+			if l.currentChar == '.' {
+				l.readChar()
+				if isDigit(l.currentChar) {
+					t.Literal += "." + l.readNumber()
+					t.Type = token.FLOAT
+				} else {
+					t.Type = token.ILLEGAL
+				}
+			} else {
+				t.Type = token.INT
+			}
+			return t
 		} else {
 			t = token.Token{Type: token.ILLEGAL, Literal: string(l.currentChar)}
 		}
@@ -87,4 +101,16 @@ func (l *Lexer) eatWhitespace() {
 	for l.currentChar == ' ' || l.currentChar == '\t' || l.currentChar == '\n' || l.currentChar == '\r' {
 		l.readChar()
 	}
+}
+
+func isDigit(c byte) bool {
+	return '0' <= c && c <= '9'
+}
+
+func (l *Lexer) readNumber() string {
+	p := l.position
+	for isDigit(l.currentChar) {
+		l.readChar()
+	}
+	return l.input[p:l.position]
 }
