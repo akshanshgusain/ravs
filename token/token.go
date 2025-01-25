@@ -15,6 +15,7 @@ const (
 	// Identifiers + literals
 	IDENT = "IDENT" // add, foobar, x, y, ...
 	INT   = "INT"   // 1343456
+	FLOAT = "FLOAT" //123123.4567
 
 	// Operators
 	ASSIGN   = "="
@@ -48,3 +49,23 @@ const (
 	ELSE     = "ELSE"
 	RETURN   = "RETURN"
 )
+
+// map of keywords
+var keywords = map[string]TokenType{
+	"func":   FUNCTION,
+	"let":    LET,
+	"true":   TRUE,
+	"false":  FALSE,
+	"if":     IF,
+	"else":   ELSE,
+	"return": RETURN,
+}
+
+// LookupIdentifier check if the given identifier is a keyword
+func LookupIdentifier(ident string) TokenType {
+	if t, ok := keywords[ident]; ok {
+		return t
+	}
+	return IDENT
+
+}
