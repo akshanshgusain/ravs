@@ -29,13 +29,29 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
+// peekChar gives us the next character and advance our position in the input string
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0 // ASCII NUL
+	} else {
+		return l.input[l.readPosition]
+	}
+}
+
 // NextToken returns Token based on the current character
 func (l *Lexer) NextToken() token.Token {
 	var t token.Token
 	l.eatWhitespace()
 	switch l.currentChar {
 	case '=':
-		t = token.Token{Type: token.ASSIGN, Literal: string(l.currentChar)}
+		if l.peekChar() == '=' {
+			c := l.currentChar
+			l.readChar()
+			literal := string(c) + string(l.currentChar)
+			t = token.Token{Type: token.EQ, Literal: literal}
+		} else {
+			t = token.Token{Type: token.ASSIGN, Literal: string(l.currentChar)}
+		}
 	case '+':
 		t = token.Token{Type: token.PLUS, Literal: string(l.currentChar)}
 	case '-':
@@ -44,6 +60,15 @@ func (l *Lexer) NextToken() token.Token {
 		t = token.Token{Type: token.SLASH, Literal: string(l.currentChar)}
 	case '*':
 		t = token.Token{Type: token.ASTERISK, Literal: string(l.currentChar)}
+	case '!':
+		if l.peekChar() == '=' {
+			c := l.currentChar
+			l.readChar()
+			literal := string(c) + string(l.currentChar)
+			t = token.Token{Type: token.NOT_EQ, Literal: literal}
+		} else {
+			t = token.Token{Type: token.BANG, Literal: string(l.currentChar)}
+		}
 	case '<':
 		t = token.Token{Type: token.LT, Literal: string(l.currentChar)}
 	case '>':
@@ -105,7 +130,6 @@ func isLetter(c byte) bool {
 func (l *Lexer) eatWhitespace() {
 	for l.currentChar == ' ' || l.currentChar == '\t' || l.currentChar == '\n' || l.currentChar == '\r' {
 		l.readChar()
-		println("ate whitespace")
 	}
 }
 
