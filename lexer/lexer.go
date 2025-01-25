@@ -36,6 +36,10 @@ func (l *Lexer) NextToken() token.Token {
 	switch l.currentChar {
 	case '=':
 		t = token.Token{Type: token.ASSIGN, Literal: string(l.currentChar)}
+	case '+':
+		t = token.Token{Type: token.PLUS, Literal: string(l.currentChar)}
+	case '-':
+		t = token.Token{Type: token.MINUS, Literal: string(l.currentChar)}
 	case '/':
 		t = token.Token{Type: token.SLASH, Literal: string(l.currentChar)}
 	case '*':
@@ -82,6 +86,7 @@ func (l *Lexer) NextToken() token.Token {
 			t = token.Token{Type: token.ILLEGAL, Literal: string(l.currentChar)}
 		}
 	}
+	l.readChar() // to next char
 	return t
 }
 
@@ -100,6 +105,7 @@ func isLetter(c byte) bool {
 func (l *Lexer) eatWhitespace() {
 	for l.currentChar == ' ' || l.currentChar == '\t' || l.currentChar == '\n' || l.currentChar == '\r' {
 		l.readChar()
+		println("ate whitespace")
 	}
 }
 
