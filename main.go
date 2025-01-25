@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"ravs_lang/repl"
+)
 
 func main() {
-	fmt.Print("Hi! I am Ravs")
+	fmt.Printf("Hi! I am Ravs\n")
+	repl.Start(os.Stdin, os.Stdout)
 }
