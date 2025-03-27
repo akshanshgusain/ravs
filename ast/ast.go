@@ -16,9 +16,11 @@ type Expression interface {
 	expressionNode()
 }
 
-// Root node
+// implementations of various types of Nodes:
+
+// Program is the root node of every AST
 type Program struct {
-	Statements []Statement
+	Statements []Statement // very program is series of statements(Nodes of statement type)
 }
 
 func (p *Program) TokenLiteral() string {
@@ -28,6 +30,8 @@ func (p *Program) TokenLiteral() string {
 		return ""
 	}
 }
+
+// implementations of various types of Statement and Expression Nodes:
 
 type LetStatement struct {
 	Token token.Token // Token.LET
