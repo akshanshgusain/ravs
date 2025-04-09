@@ -21,7 +21,7 @@ const (
 
 type (
 	prefixParseFn  func() ast.Expression
-	postfixParseFn func() ast.Expression
+	postfixParseFn func(ast.Expression) ast.Expression
 	infixParseFn   func(ast.Expression) ast.Expression
 )
 
